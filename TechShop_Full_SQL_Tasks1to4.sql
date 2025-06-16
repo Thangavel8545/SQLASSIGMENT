@@ -1,9 +1,7 @@
 --task 1
 -- db
 CREATE DATABASE TechShop;
-GO
 USE TechShop;
-GO
 
 -- customers
 CREATE TABLE Customers (
@@ -254,10 +252,10 @@ SELECT COUNT(*) AS TotalProducts FROM Products;
 SELECT SUM(TotalAmount) AS TotalRevenue FROM Orders;
 
 -- 5. revenue by customer
-DECLARE @CID INT = 3;
+
 SELECT SUM(o.TotalAmount) AS CustomerRevenue
 FROM Orders o
-WHERE o.CustomerID = @CID;
+WHERE o.CustomerID = 3;
 
 -- 6. top order customers
 SELECT TOP 1 c.FirstName, c.LastName, COUNT(o.OrderID) AS OrderCount
