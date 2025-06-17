@@ -1,0 +1,210 @@
+--SQL1-
+- Query 1: Salesman names and commission
+SELECT name, commission
+FROM salesman;
+
+-- Query 2: Unique salesman IDs from orders
+SELECT DISTINCT salesman_id
+FROM orders;
+
+-- Query 3: Salesmen in Paris
+SELECT name, city
+FROM salesman
+WHERE city = 'Paris';
+
+-- Query 4: Customers with grade 200
+SELECT *
+FROM customer
+WHERE grade = 200;
+
+-- Query 5: Orders handled by salesman 5001
+SELECT ord_no, ord_date, purch_amt
+FROM orders
+WHERE salesman_id = 5001;
+
+-- Query 6: 1971 Literature winner
+SELECT winner
+FROM nobel_win
+WHERE year = 1971 AND subject = 'Literature';
+
+-- Query 7: Winners whose name starts with Louis
+SELECT *
+FROM nobel_win
+WHERE winner LIKE 'Louis%';
+
+-- Query 8: Physics (1970) and Economics (1971) winners
+SELECT * 
+FROM nobel_win
+WHERE (subject = 'Physics' AND year = 1970)
+UNION
+SELECT * 
+FROM nobel_win
+WHERE (subject = 'Economics' AND year = 1971);
+
+-- Query 9: 1970 Nobel winners except Physiology and Economics
+SELECT *
+FROM nobel_win
+WHERE year = 1970 AND subject NOT IN ('Physiology', 'Economics');
+
+-- Query 10: Winners not starting with 'P', sorted by year desc
+SELECT *
+FROM nobel_win
+WHERE subject NOT LIKE 'P%'
+ORDER BY year DESC, winner;
+
+-- Query 11: Cheapest item(s)
+SELECT pro_name, pro_price
+FROM item_mast
+WHERE pro_price = (SELECT MIN(pro_price) FROM item_mast);
+
+-- Query 12: Customers in New York or grade not above 100
+SELECT *
+FROM customer
+WHERE city = 'New York' OR NOT grade > 100;
+
+-- Query 13: Salesmen with commission between 0.12 and 0.14
+SELECT *
+FROM salesman
+WHERE commission BETWEEN 0.12 AND 0.14;
+
+-- Query 14: Customers whose names end with 'n'
+SELECT *
+FROM customer
+WHERE cust_name LIKE '%n';
+
+-- Query 15: Salesmen whose name starts with 'N' and 4th char is 'l'
+SELECT *
+FROM salesman
+WHERE name LIKE 'N__l%';
+
+-- Query 16: Customers with NULL grade
+SELECT *
+FROM customer
+WHERE grade IS NULL;
+
+-- Query 17: Total purchase amount
+SELECT SUM(purch_amt)
+FROM orders;
+
+-- Query 18: Count of unique salesmen
+SELECT COUNT(DISTINCT salesman_id)
+FROM orders;
+
+-- Query 19: Highest grade per city
+SELECT city, MAX(grade)
+FROM customer
+GROUP BY city;
+
+-- Query 20: Max purchase per customer
+SELECT customer_id, MAX(purch_amt)
+FROM orders
+GROUP BY customer_id;
+
+-- Query 21: Max purchase per customer per date
+SELECT customer_id, ord_date, MAX(purch_amt)
+FROM orders
+GROUP BY customer_id, ord_date;
+
+-- Query 22: Max purchase per salesman on 2012-08-17
+SELECT salesman_id, MAX(purch_amt)
+FROM orders
+WHERE ord_date = '2012-08-17'
+GROUP BY salesman_id;
+
+-- Query 23: Max purchase > 2000 per customer-date
+SELECT customer_id, ord_date, MAX(purch_amt)
+FROM orders
+GROUP BY customer_id, ord_date
+HAVING MAX(purch_amt) > 2000;
+
+-- Query 24: Count orders on 2012-08-17
+SELECT COUNT(*)
+FROM orders
+WHERE ord_date = '2012-08-17';
+
+--FOR SQL2
+
+-- Query 1: Customers and salesmen in the same city
+SELECT c.cust_name, s.name, s.city
+FROM customer c, salesman s
+WHERE c.city = s.city;
+
+-- Query 2: Customers and their salesmen
+SELECT c.cust_name, s.name
+FROM customer c, salesman s
+WHERE c.salesman_id = s.salesman_id;
+
+-- Query 3: Orders where customer and salesman are in different cities
+SELECT o.ord_no, c.cust_name, o.customer_id, o.salesman_id
+FROM orders o, customer c, salesman s
+WHERE o.customer_id = c.customer_id
+  AND o.salesman_id = s.salesman_id
+  AND c.city <> s.city;
+
+-- Query 4: Orders by salesman 'Paul Adam'
+SELECT *
+FROM orders
+WHERE salesman_id = (
+  SELECT salesman_id FROM salesman WHERE name = 'Paul Adam'
+);
+
+-- Query 5: Orders > avg of 2012-10-10
+SELECT *
+FROM orders
+WHERE purch_amt > (
+  SELECT AVG(purch_amt)
+  FROM orders
+  WHERE ord_date = '2012-10-10'
+);
+
+-- Query 6: Orders by salesmen in Paris
+SELECT *
+FROM orders
+WHERE salesman_id IN (
+  SELECT salesman_id
+  FROM salesman
+  WHERE city = 'Paris'
+);
+
+-- Query 7: Orders by salesman with max commission
+SELECT ord_no, purch_amt, ord_date, salesman_id
+FROM orders
+WHERE salesman_id = (
+  SELECT salesman_id
+  FROM salesman
+  WHERE commission = (SELECT MAX(commission) FROM salesman)
+);
+
+-- Query 8: Salesmen with more than one customer
+SELECT s.salesman_id, s.name
+FROM salesman s
+WHERE 1 < (
+  SELECT COUNT(*)
+  FROM customer c
+  WHERE c.salesman_id = s.salesman_id
+);
+
+-- Query 9: Salesmen with only one customer
+SELECT s.salesman_id, s.name, s.city, s.commission
+FROM salesman s, customer c
+WHERE s.salesman_id = c.salesman_id
+GROUP BY s.salesman_id, s.name, s.city, s.commission
+HAVING COUNT(c.salesman_id) = 1;
+
+-- Query 10: Orders greater than at least one from 2012-09-10
+SELECT *
+FROM orders
+WHERE purch_amt > ANY (
+  SELECT purch_amt
+  FROM orders
+  WHERE ord_date = '2012-09-10'
+);
+
+-- Query 11: Customers whose grade > all customers in New York
+SELECT *
+FROM customer
+WHERE grade > ALL (
+  SELECT grade
+  FROM customer
+  WHERE city = 'New York'
+);
