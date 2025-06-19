@@ -1,0 +1,132 @@
+class Program { static void Main() {
+ // 1. Fibonacci series from 1 to 50 Console.WriteLine("Fibonacci series from 1 to 50:"); int a = 0, b = 1; while (b <= 50) { if (b >= 1) Console.Write(b + " "); int temp = a + b; a = b; b = temp; }
+
+Console.WriteLine("\n\n2. Prime check:");
+    Console.Write("Enter a number: ");
+    int num = int.Parse(Console.ReadLine());
+    bool isPrime = true;
+    if (num < 2) isPrime = false;
+    else
+    {
+        for (int i = 2; i <= Math.Sqrt(num); i++)
+        {
+            if (num % i == 0)
+            {
+                isPrime = false;
+                break;
+            }
+        }
+    }
+    Console.WriteLine(isPrime ? "Prime" : "Not Prime");
+
+    Console.WriteLine("\n3. Prime numbers from 1 to 100:");
+    for (int i = 2; i <= 100; i++)
+    {
+        bool prime = true;
+        for (int j = 2; j <= Math.Sqrt(i); j++)
+        {
+            if (i % j == 0)
+            {
+                prime = false;
+                break;
+            }
+        }
+        if (prime) Console.Write(i + " ");
+    }
+
+    Console.WriteLine("\n\n4. Palindrome check:");
+    Console.Write("Enter a string: ");
+    string str = Console.ReadLine();
+    string rev = "";
+    for (int i = str.Length - 1; i >= 0; i--)
+    {
+        rev += str[i];
+    }
+    Console.WriteLine(rev == str ? "Palindrome" : "Not Palindrome");
+
+    Console.WriteLine("\n5. Factorial:");
+    Console.Write("Enter a number: ");
+    int n = int.Parse(Console.ReadLine());
+    long fact = 1;
+    for (int i = 1; i <= n; i++)
+    {
+        fact *= i;
+    }
+    Console.WriteLine("Factorial: " + fact);
+
+    // 6. Matrix Addition
+    int[,] m1 = new int[3, 3];
+    int[,] m2 = new int[3, 3];
+    int[,] sum = new int[3, 3];
+    Console.WriteLine("\n6. Enter elements for 1st matrix:");
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            m1[i, j] = int.Parse(Console.ReadLine());
+
+    Console.WriteLine("Enter elements for 2nd matrix:");
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            m2[i, j] = int.Parse(Console.ReadLine());
+
+    Console.WriteLine("Sum of matrices:");
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            sum[i, j] = m1[i, j] + m2[i, j];
+            Console.Write(sum[i, j] + " ");
+        }
+        Console.WriteLine();
+    }
+
+    // 7. Matrix Multiplication
+    int[,] result = new int[3, 3];
+    Console.WriteLine("\n7. Matrix multiplication:");
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            result[i, j] = 0;
+            for (int k = 0; k < 3; k++)
+            {
+                result[i, j] += m1[i, k] * m2[k, j];
+            }
+            Console.Write(result[i, j] + " ");
+        }
+        Console.WriteLine();
+    }
+
+    // 8. Sum of all elements
+    int totalSum = 0;
+    Console.WriteLine("\n8. Sum of all elements in 1st matrix:");
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            totalSum += m1[i, j];
+    Console.WriteLine("Total Sum: " + totalSum);
+
+    // 9. Sum of even and odd elements
+    int evenSum = 0, oddSum = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (m1[i, j] % 2 == 0)
+                evenSum += m1[i, j];
+            else
+                oddSum += m1[i, j];
+        }
+    }
+    Console.WriteLine("Even Sum: " + evenSum);
+    Console.WriteLine("Odd Sum: " + oddSum);
+
+    // 10. Principal diagonal sum
+    int diagSum = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        diagSum += m1[i, i];
+    }
+    Console.WriteLine("Principal Diagonal Sum: " + diagSum);
+}
+
+}
+
